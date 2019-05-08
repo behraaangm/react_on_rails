@@ -7,6 +7,7 @@
   },
   "private": true,
   "dependencies": {
+    "reason-react": "0.7.0",
     "@babel/cli": "^7.0.0",
     "@babel/polyfill": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
@@ -53,6 +54,7 @@
     "webpack-merge": "^4.1.5"
   },
   "devDependencies": {
+    "bs-platform": "^5.0.4",
     "@pmmmwh/react-refresh-webpack-plugin": "0.4.0-beta.4",
     "body-parser": "^1.19.0",
     "eslint": "^5.7.0",
