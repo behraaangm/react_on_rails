@@ -1,12 +1,14 @@
 {
   "name": "react_on_rails",
   "description": "example of server rendering",
+  "main": "server.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/shakacode/react_on_rails.git"
   },
   "private": true,
   "dependencies": {
+    "bs-react-on-rails": "^0.2.0",
     "reason-react": "0.7.0",
     "@babel/cli": "^7.0.0",
     "@babel/polyfill": "^7.0.0",
