@@ -64,6 +64,7 @@
   "scripts": {
     "test": "jest node_package/tests",
     "clean": "rm -rf node_package/lib",
+    "start": "nps",
     "prepare": "yarn run build",
     "prepublish": "npm run prepare",
     "build": "yarn run clean && yarn run tsc",
