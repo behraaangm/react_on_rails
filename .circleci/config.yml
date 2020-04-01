@@ -187,9 +187,7 @@ jobs:
     steps:
       - checkout
       - run: *print-system-info
-      - run: *install-yarn-link-source
       - restore_cache: *restore-dummy-app-node-modules-cache
-      - run: *install-yarn-link-destination
       - run: *install-dummy-app-node-modules
       - run: *install-dummy-app-ruby-gems
       - run:
