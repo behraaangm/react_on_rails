@@ -34,15 +34,6 @@ aliases:
     name: Install Node modules with Yarn for dummy app
     command: cd spec/dummy && yarn install --no-progress --no-emoji
 
-  # Setup yarn links for react-on-rails-pro-vm-renderer
-  - &install-yarn-link-source
-    name: Install yarn link for react-on-rails-pro-vm-renderer
-    command: yarn link
-
-  - &install-yarn-link-destination
-    name: Install yarn link for react-on-rails-pro-vm-renderer
-    command: cd spec/dummy/client && yarn link react-on-rails-pro-vm-renderer
-
   # Install ruby gems unless existing set of gems is satisfying bundler.
   - &install-dummy-app-ruby-gems
     name: Install Ruby Gems for dummy app
@@ -77,11 +68,11 @@ aliases:
     keys:
       - v3-dummy-app-gem-cache-{{ checksum "spec/dummy/Gemfile.lock" }}
 
-  # Restore vendor/bundle dir from cache using react_on_rails_pro.gemspec checksum as a key.
+  # Restore vendor/bundle dir from cache using react_on_rails.gemspec checksum as a key.
   - &restore-package-gem-cache
     name: Restore cached Ruby Gems for package
     keys:
-      - v3-package-app-gem-cache-{{ checksum "react_on_rails_pro.gemspec" }}
+      - v3-package-app-gem-cache-{{ checksum "react_on_rails.gemspec" }}
 
     # NOTE: Sometimes CI generated docker images are not updated in time to keep up with the minimum required
     # by chromedriver versions of Chrome. Just bump here Chrome version if chromedriver raises errors
@@ -170,7 +161,7 @@ jobs:
       - run: *install-package-ruby-gems
       - save_cache:
           name: Save dummy app ruby gems to cache
-          key: v3-package-app-gem-cache-{{ checksum "react_on_rails_pro.gemspec" }}
+          key: v3-package-app-gem-cache-{{ checksum "react_on_rails.gemspec" }}
           paths:
             - vendor/bundle
 
@@ -235,57 +226,12 @@ jobs:
       - run:
           name: Run rspec tests
           command: |
-            bundle exec rspec spec/react_on_rails_pro
+            bundle exec rspec spec/react_on_rails
       - store_test_results:
           path: ~/rspec
       - store_artifacts:
           path: log/test.log
 
-  # Start Renderer and run RSpec test suite for dummy app.
-  # NOTES:
-  # Seems that we cannot use symlinks (yarn link) with caches for the main renderer package
-  # react-on-rails-pro-vm-renderer. Consequently, we just reinstall the top level, renderer, node packages
-  # as well as the
-  rspec-dummy-app-vm-renderer:
-    docker:
-      - image: *docker_image
-    steps:
-      - checkout
-      - run: *print-system-info
-      - restore_cache: *restore-package-gem-cache
-      - restore_cache: *restore-dummy-app-gem-cache
-      - restore_cache:
-          name: Restore cached webpack bundles for dummy app
-          key: v3-dummy-app-webpack-bundle-{{ .Revision }}
-      - run: *install-dummy-app-ruby-gems
-      - run: *install-package-node-modules
-      - run: *install-latest-chrome
-      - run: *install-yarn-link-source
-      - run: *install-yarn-link-destination
-      - run: *install-dummy-app-node-modules
-      - run:
-          name: Run Node renderer in a background
-          command: cd spec/dummy && yarn run vm-renderer
-          background: true
-      - run:
-          name: Touch webpack bundles
-          command:  touch spec/dummy/public/webpack/test/*
-      - run:
-          name: Run rspec tests
-          command: |
-            cd spec/dummy && bundle exec rspec --format RspecJunitFormatter \
-                                               --out ~/rspec/rspec.xml \
-                                               --format documentation
-      - store_test_results:
-          path: ~/rspec
-      - store_artifacts:
-          path: spec/dummy/tmp/capybara
-      - store_artifacts:
-          path: spec/dummy/log/test.log
-      - store_artifacts:
-          path: spec/dummy/yarn-error.log
-
-  # Test React on Rails Pro without the VM Renderer
   rspec-dummy-app:
     docker:
       - image: *docker_image
@@ -352,9 +298,3 @@ workflows:
             - install-package-ruby-gems
             - install-dummy-app-ruby-gems
             - build-dummy-app-webpack-test-bundles
-
-      - rspec-dummy-app-vm-renderer:
-          requires:
-            - install-package-ruby-gems
-            - build-dummy-app-webpack-test-bundles
-            - install-dummy-app-ruby-gems
