@@ -1,5 +1,6 @@
 const environment = require('./environment');
 const merge = require('webpack-merge');
+
 const devBuild = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 const webpack = require('webpack');
 
