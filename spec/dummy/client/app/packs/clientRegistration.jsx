@@ -32,7 +32,6 @@ import ReactHelmetApp from '../startup/ReactHelmetClientApp';
 import ImageExample from '../components/ImageExample';
 
 import SetTimeoutLoggingApp from '../startup/SetTimeoutLoggingApp';
-
 ReactOnRails.setOptions({
   traceTurbolinks: true,
 });
