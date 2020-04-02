@@ -29,6 +29,11 @@ aliases:
     name: Install Node modules with Yarn for renderer package
     command: yarn install --no-progress --no-emoji
 
+  # Install/update Node modules for dummy app unless existing set of modules is satisfying Yarn.
+  - &install-dummy-app-node-modules
+    name: Install Node modules with Yarn for dummy app
+    command: cd spec/dummy && yarn install --no-progress --no-emoji
+
   # Setup yarn links for react-on-rails
   - &install-yarn-link-source
     name: Install yarn link for react-on-rails
@@ -36,12 +41,7 @@ aliases:
 
   - &install-yarn-link-destination
     name: Install yarn link for react-on-rails
-    command: cd spec/dummy && yarn link react-on-rails
-
-  # Install/update Node modules for dummy app unless existing set of modules is satisfying Yarn.
-  - &install-dummy-app-node-modules
-    name: Install Node modules with Yarn for dummy app
-    command: cd spec/dummy && yarn install --no-progress --no-emoji
+    command: cd spec/dummy/client && yarn link react-on-rails
 
   # Install ruby gems unless existing set of gems is satisfying bundler.
   - &install-dummy-app-ruby-gems
